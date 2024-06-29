@@ -83,7 +83,7 @@
     (= option "4") (option4 cities-db)
     :else (println "Invalid Option, please try again")))
 
-(defn menu [cities-db]
+(defn main-menu [cities-db]
   ;; Main menu loop for user interaction.
 (loop []
   (let [option (str/trim (showMenu))]
