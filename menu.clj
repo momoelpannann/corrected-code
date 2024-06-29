@@ -1,15 +1,10 @@
-;; Mohamed Elpannann 40251343
-;; Assignment 3 348 Summer 2024 
-;; This file contains  functions for displaying the main menu and handling user interaction.
-;; It provides various options to list cities, display city information, list provinces, 
-;; and display province information. The `main-menu` function drives the menu loop, 
-;; repeatedly prompting the user for input and processing the selected option.
+
+
 (ns menu
   (:require [clojure.string :as str]
             [db]))
 
 (defn showMenu []
-  ;; Display the main menu and prompt the user for an option.
   (println "\n\n*** City Information Menu ***")
   (println "-----------------------------\n")
   (println "1. List cities")
@@ -22,8 +17,8 @@
     (flush) 
     (read-line)))
 
+;; Update: Accept `cities-db` as a parameter
 (defn option1 [cities-db]
-  ;; Submenu for listing cities
   (println "*** List Cities Submenu ***")
   (println "1. List all cities")
   (println "2. List all cities for a given province, ordered by size and name")
@@ -33,6 +28,7 @@
   (flush)
   (let [sub-option (read-line)]
     (cond
+      ;; Update: Use `cities-db` instead of `db/cities-db`
       (= sub-option "1") (doseq [city (db/get-cities cities-db)]
                            (println (:name city)))
       (= sub-option "2") (do
@@ -50,46 +46,52 @@
       (= sub-option "4") (println "Returning to main menu")
       :else (println "Invalid option"))))
 
+;; Update: Accept `cities-db` as a parameter
 (defn option2 [cities-db]
-  ;; Display information for a specific city.
   (print "\nPlease enter the city name => ") 
   (flush)
   (let [city-name (read-line)]
+    ;; Update: Use `cities-db` instead of `db/cities-db`
     (if-let [city (db/get-city-info cities-db city-name)]
       (println city)
       (println "City not found."))))
 
+;; Update: Accept `cities-db` as a parameter
 (defn option3 [cities-db]
-  ;; List all provinces with the total number of cities.
   (println "List all provinces with total number of cities")
+  ;; Update: Use `cities-db` instead of `db/cities-db`
   (doseq [[province count] (db/get-provinces cities-db)]
     (println (str province " " count)))
   (let [total-cities (reduce + (map second (db/get-provinces cities-db)))
         total-provinces (count (db/get-provinces cities-db))]
     (println (str "Total: " total-provinces " provinces, " total-cities " cities on file."))))
 
+;; Update: Accept `cities-db` as a parameter
 (defn option4 [cities-db]
-  ;; List all provinces with the total population.
   (println "List all provinces with total population")
+  ;; Update: Use `cities-db` instead of `db/cities-db`
   (doseq [[province population] (db/get-provinces-population cities-db)]
     (println (str province " " population))))
 
+;; Update: Accept `cities-db` as a parameter
 (defn processOption [option cities-db]
-  ;; Call the relevant function based on the user's menu selection.
   (cond
+    ;; Update: Pass `cities-db` to each option function call
     (= option "1") (option1 cities-db)
     (= option "2") (option2 cities-db)
     (= option "3") (option3 cities-db)
     (= option "4") (option4 cities-db)
     :else (println "Invalid Option, please try again")))
 
+;; Update: Rename to `main-menu` and accept `cities-db` as a parameter
 (defn main-menu [cities-db]
-  ;; Main menu loop for user interaction.
-(loop []
-  (let [option (str/trim (showMenu))]
-    (if (= option "5")
-      (println "\nGood Bye\n")
-      (do 
-        (processOption option cities-db)
-        (recur))))))
-
+  ;; Add a loop to repeatedly prompt the user for input and process the selected option
+  (loop []
+    (let [option (str/trim (showMenu))]
+      (if (= option "5")
+        (println "\nGood Bye\n")
+        (do 
+          ;; Update: Pass `cities-db` to `processOption`
+          (processOption option cities-db)
+          ;; Recur to prompt the user again
+          (recur))))))
