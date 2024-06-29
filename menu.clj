@@ -71,7 +71,7 @@
 (defn option4 [cities-db]
   ;; List all provinces with the total population.
   (println "List all provinces with total population")
-  (doseq [[province population] (db/get-provinces-population db/cities-db)]
+  (doseq [[province population] (db/get-provinces-population cities-db)]
     (println (str province " " population))))
 
 (defn processOption [option cities-db]
